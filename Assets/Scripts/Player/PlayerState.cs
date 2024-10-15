@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Player
 {
-    public class PlayerStateMachine : MonoBehaviour, IStateMachine
+    public class PlayerState : MonoBehaviour, IStateMachine
     {
         public void OnStateEnter()
         {

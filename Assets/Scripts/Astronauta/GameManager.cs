@@ -8,7 +8,7 @@ namespace Assets.Scripts.Astronauta
 {
     public class GameManager : Singleton<GameManager>
     {
-        public PlayerStateMachine playerStateMachine;
+        public PlayerState playerStateMachine;
 
         private enum GameStates
         {
@@ -19,16 +19,16 @@ namespace Assets.Scripts.Astronauta
             LOSE
         };
 
-        private Dictionary<GameStates, IStateMachine> _stateMachines = new Dictionary<GameStates, IStateMachine>();
+        private Dictionary<GameStates, IStateMachine> _states = new Dictionary<GameStates, IStateMachine>();
         private StateMachineController<GameStates> _stateMachineController = new StateMachineController<GameStates>();
 
         private void Start()
         {
-            _stateMachines.Add(GameStates.INTRO, playerStateMachine);
-            _stateMachines.Add(GameStates.PLAY, playerStateMachine);
-            _stateMachines.Add(GameStates.PAUSE, playerStateMachine);
-            _stateMachines.Add(GameStates.WIN, playerStateMachine);
-            _stateMachines.Add(GameStates.LOSE, playerStateMachine);
+            _states.Add(GameStates.INTRO, playerStateMachine);
+            _states.Add(GameStates.PLAY, playerStateMachine);
+            _states.Add(GameStates.PAUSE, playerStateMachine);
+            _states.Add(GameStates.WIN, playerStateMachine);
+            _states.Add(GameStates.LOSE, playerStateMachine);
             InitStateMachines();
         }
 
@@ -39,7 +39,7 @@ namespace Assets.Scripts.Astronauta
 
         private void InitStateMachines()
         {
-            _stateMachineController.Init(_stateMachines, GameStates.PLAY);
+            _stateMachineController.Init(_states, GameStates.PLAY);
         }
     }
 }
