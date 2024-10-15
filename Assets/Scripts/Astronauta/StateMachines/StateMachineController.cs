@@ -7,7 +7,7 @@ namespace Assets.Scripts.Astronauta.StateMachines
     public class StateMachineController<T> where T : Enum
     {
         public Dictionary<T, IStateMachine> stateMachines;
-        public IStateMachine currentState;
+        public T currentState;
 
         public void Init(Dictionary<T, IStateMachine> _stateMachines, T startState)
         {
@@ -18,10 +18,15 @@ namespace Assets.Scripts.Astronauta.StateMachines
 
         public void SwitchState(T newState)
         {
-            if (currentState != null) currentState.OnStateExit();
+            if (currentState != null) stateMachines[currentState].OnStateExit();
 
-            currentState = stateMachines[newState];
-            currentState.OnStateEnter();
+            currentState = newState;
+            stateMachines[currentState].OnStateEnter();
+        }
+
+        public void RunState()
+        {
+            stateMachines[currentState].OnStateUpdate();
         }
     }
 }

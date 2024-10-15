@@ -3,20 +3,21 @@ using Assets.Scripts.Astronauta.StateMachines;
 using Assets.Scripts.Astronauta.StateMachines.Interfaces;
 using Assets.Scripts.Player;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Scripts.Astronauta
 {
     public class GameManager : Singleton<GameManager>
     {
-        public PlayerState playerStateMachine;
+        public IdleState idleState;
+        public MoveState moveState;
+        public JumpState jumpState;
 
         private enum GameStates
         {
-            INTRO,
-            PLAY,
-            PAUSE,
-            WIN,
-            LOSE
+            IDLE,
+            MOVE,
+            JUMP
         };
 
         private Dictionary<GameStates, IStateMachine> _states = new Dictionary<GameStates, IStateMachine>();
@@ -24,22 +25,34 @@ namespace Assets.Scripts.Astronauta
 
         private void Start()
         {
-            _states.Add(GameStates.INTRO, playerStateMachine);
-            _states.Add(GameStates.PLAY, playerStateMachine);
-            _states.Add(GameStates.PAUSE, playerStateMachine);
-            _states.Add(GameStates.WIN, playerStateMachine);
-            _states.Add(GameStates.LOSE, playerStateMachine);
+            _states.Add(GameStates.IDLE, idleState);
+            _states.Add(GameStates.MOVE, moveState);
+            _states.Add(GameStates.JUMP, jumpState);
             InitStateMachines();
         }
 
         private void Update()
         {
-            _stateMachineController.currentState.OnStateUpdate();
+
+            if (Input.GetKey(KeyCode.Space))
+            {
+                _stateMachineController.SwitchState(GameStates.JUMP);
+            }
+
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+            {
+                _stateMachineController.SwitchState(GameStates.MOVE);
+            }
+            
+            _stateMachineController.RunState();
+
+            if(_stateMachineController.currentState.Equals(GameStates.MOVE) || _stateMachineController.currentState.Equals(GameStates.JUMP))
+                _stateMachineController.SwitchState(GameStates.IDLE);
         }
 
         private void InitStateMachines()
         {
-            _stateMachineController.Init(_states, GameStates.PLAY);
+            _stateMachineController.Init(_states, GameStates.IDLE);
         }
     }
 }
